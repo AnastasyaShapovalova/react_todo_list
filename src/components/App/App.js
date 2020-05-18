@@ -13,8 +13,8 @@ class App extends React.Component {
     state = {
       todoData : [
         { label: 'Learn Html', important: false, done: false, id: 1, },
-            { label: 'Learn JS', important: false, done: false, id: 2, },
-            { label: 'Learn React', important: false, done: false, id: 3, },
+        { label: 'Learn JS', important: false, done: false, id: 2, },
+        { label: 'Learn React', important: false, done: false, id: 3, },
     ]
 };
 
@@ -68,13 +68,30 @@ toggleDone = (id) => {
 }
 
 toggleImportant = (id) => {
+    this.setState(({ todoData }) => {
+        const index = todoData.findIndex((elem) => elem.id === id);
+
+        const oldObj = todoData[index];
+        const newObj = { ...oldObj, important: !oldObj.important };
+
+        const newArr = [
+            ...todoData.slice(0, index),
+            newObj,
+            ...todoData.slice(index + 1)
+        ];
+
+        return {
+            todoData: newArr
+        }
+    }); 
 
 }
     render() {
         const done = this.state.todoData.filter((el) => el.done).length;
+        const toDo = this.state.todoData.filter((el) => !el.done).length;
         return (
             <div className="App">
-                <AppHeader toDo = {3} done = {done}/>
+                <AppHeader toDo = {toDo} done = {done}/>
                 <SearchBlock />
                 <TodoList 
                 todoItems={this.state.todoData}
